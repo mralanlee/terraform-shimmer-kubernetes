@@ -1,0 +1,10 @@
+formatter: "markdown table"
+footer-from: ""
+recursive:
+  enabled: false
+sections:
+  hide: []
+  show: []
+sort:
+  enabled: true
+  by: name
