@@ -1,35 +1,49 @@
-resource "proxmox_vm_qemu" "k8s_worker" {
+resource "proxmox_virtual_environment_vm" "k8s_worker" {
   for_each = var.worker_nodes
 
-  name        = each.key
-  target_node = each.value.target_node
-  clone       = var.vm_template
+  name      = each.key
+  node_name = each.value.target_node
+  vm_id     = null # Auto-assign
 
-  cores   = each.value.cores
-  sockets = 1
-  memory  = each.value.memory
+  agent {
+    enabled = true
+  }
+
+  cpu {
+    cores   = each.value.cores
+    sockets = 1
+    type    = "host"
+  }
+
+  memory {
+    dedicated = each.value.memory
+  }
 
   disk {
-    slot    = 0
-    size    = each.value.disk_size
-    type    = "scsi"
-    storage = "local-lvm"
+    datastore_id = "local-lvm"
+    file_id      = "local:iso/debian-12-generic-amd64.img" # Reference to template
+    interface    = "virtio0"
+    iothread     = true
+    size         = each.value.disk_size
   }
 
-  network {
-    model  = "virtio"
+  network_device {
     bridge = "vmbr0"
+    model  = "virtio"
   }
 
-  cloudinit_cdrom_storage = "local-lvm"
-  ipconfig0               = "ip=dhcp"
+  initialization {
+    ip_config {
+      ipv4 {
+        address = "dhcp"
+      }
+    }
 
-  ciuser  = "debian"
-  sshkeys = var.ssh_pub_key
-
-  lifecycle {
-    ignore_changes = [network]
+    user_account {
+      username = "debian"
+      keys     = [var.ssh_pub_key]
+    }
   }
 
-  tags = "terraform;k8s;worker;vm"
+  tags = ["terraform", "k8s", "worker", "vm"]
 }

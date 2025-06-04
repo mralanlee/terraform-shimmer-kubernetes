@@ -1,8 +1,12 @@
 terraform {
   required_providers {
     proxmox = {
-      source  = "telmate/proxmox"
-      version = "2.9.14"
+      source  = "bpg/proxmox"
+      version = "~> 0.78"
+    }
+    local = {
+      source  = "hashicorp/local"
+      version = "~> 2.4"
     }
   }
 }
@@ -12,8 +16,13 @@ locals {
 }
 
 provider "proxmox" {
-  pm_api_url      = local.proxmox_api_url
-  pm_user         = var.proxmox_user
-  pm_password     = var.proxmox_password
-  pm_tls_insecure = true
+  endpoint = local.proxmox_api_url
+  username = var.proxmox_user
+  password = var.proxmox_password
+  inseucre = true
+
+  ssh {
+    agent    = true
+    username = "root"
+  }
 }
