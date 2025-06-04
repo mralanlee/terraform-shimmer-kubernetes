@@ -24,7 +24,7 @@ resource "proxmox_virtual_environment_vm" "k8s_worker" {
     file_id      = "local:iso/debian-12-generic-amd64.img" # Reference to template
     interface    = "virtio0"
     iothread     = true
-    size         = each.value.disk_size
+    size         = tonumber(replace(each.value.disk_size, "G", ""))
   }
 
   network_device {
@@ -47,3 +47,4 @@ resource "proxmox_virtual_environment_vm" "k8s_worker" {
 
   tags = ["terraform", "k8s", "worker", "vm"]
 }
+
