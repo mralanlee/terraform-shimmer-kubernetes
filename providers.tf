@@ -19,7 +19,7 @@ provider "proxmox" {
   endpoint = local.proxmox_api_url
   username = var.proxmox_user
   password = var.proxmox_password
-  inseucre = true
+  insecure = true
 
   ssh {
     agent    = true
