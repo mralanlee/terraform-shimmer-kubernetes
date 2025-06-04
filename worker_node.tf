@@ -30,5 +30,6 @@ resource "proxmox_vm_qemu" "k8s_worker" {
   lifecycle {
     ignore_changes = [network]
   }
-}
 
+  tags = "terraform;k8s;worker;vm"
+}

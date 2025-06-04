@@ -25,4 +25,6 @@ resource "proxmox_lxc" "k8s_master" {
   ssh_public_keys = var.ssh_pub_key
 
   start = true
+
+  tags = "terraform;k8s;controlplane;lxc"
 }
