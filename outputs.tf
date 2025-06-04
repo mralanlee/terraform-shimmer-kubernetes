@@ -1,4 +1,4 @@
-output "master_ips" {
+output "controlplane_ips" {
   value = {
     for k, v in proxmox_virtual_environment_container.k8s_master : k => length(v.ipv4_addresses) > 0 ? v.ipv4_addresses[0] : "pending"
   }
