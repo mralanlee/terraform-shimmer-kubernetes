@@ -7,5 +7,5 @@ resource "local_file" "ansible_inventory" {
       for k, v in proxmox_virtual_environment_vm.k8s_worker : k => v.ipv4_addresses[1][0]
     }
   })
-  filename = "${path.module}/inventory.yml"
+  filename = "./inventory.yml"
 }
